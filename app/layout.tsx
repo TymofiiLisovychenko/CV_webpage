@@ -1,5 +1,7 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
+import ActiveSectionContextProvider from "@/context/active-section-context";
+import ThemeContextProvider from "@/context/theme-context";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,7 +17,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <ThemeContextProvider>
+          <ActiveSectionContextProvider>
+            {children}
+          </ActiveSectionContextProvider>
+        </ThemeContextProvider>
+      </body>
     </html>
   )
 }
