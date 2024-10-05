@@ -9,6 +9,18 @@ export const validateString = (
   return true;
 };
 
+export const validateEmail = (
+  value: unknown,
+  maxLength: number
+): value is string => {
+  var mailRegex = new RegExp('^[\w\\-\.]+@([\w\\-]+\.)+[\w\\-]{2,4}$');
+  if (!value || typeof value !== "string" || value.length > maxLength || mailRegex.test(value)) {
+    return false;
+  }
+
+  return true;
+};
+
 export const getErrorMessage = (error: unknown): string => {
   let message: string;
 
