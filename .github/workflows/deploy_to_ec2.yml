@@ -1,0 +1,26 @@
+name: Deploy to EC2
+run-name: ${{ github.actor }} is deploying the webpage
+on: 
+  push:
+    branches: [main]
+jobs:
+  Deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4 
+      - name: Build & Deploy
+        env:
+            PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+            HOSTNAME: ${{secrets.SSH_HOST}}
+            USER_NAME: ${{secrets.USER_NAME}}
+      
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+              cd /var/www/html/cv_website
+              systemctl stop myapp.service
+              git pull
+              npm run build
+              systemctl start myapp.service
+              '
